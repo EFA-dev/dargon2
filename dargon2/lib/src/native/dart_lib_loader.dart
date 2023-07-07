@@ -5,11 +5,10 @@
 
 import 'dart:ffi';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:dargon2_core/dargon2_core.dart';
+import 'package:path/path.dart' as path;
 // ignore: deprecated_member_use
-import 'dart:cli';
 
 /// The Dylib Loader for any Dart native apps, regardless of platform. Loads the dylib
 /// from the given path, based off a conditional import on dart:ui
@@ -27,16 +26,22 @@ class DartLibLoader implements LibLoader {
   /// The private getPath method, set to handle paths from all 3 Desktop platforms.
   /// Returns the relative library location for desktops based on the plugin's location
   /// and the binary's relative path
+
   @override
   String getPath() {
-    final rootLibrary = 'package:dargon2/dargon2.dart';
-    // ignore: deprecated_member_use
-    var rootPath = waitFor(Isolate.resolvePackageUri(Uri.parse(rootLibrary)))!
-        .resolve('src/blobs/')
-        .toFilePath(windows: Platform.isWindows);
-    if (Platform.isMacOS) return '${rootPath}libargon2-darwin.dylib';
-    if (Platform.isLinux) return '${rootPath}libargon2-linux.so';
-    if (Platform.isWindows) return '${rootPath}libargon2-win.dll';
-    return 'libargon2-arm.so';
+    var mainPath = '${Directory.current.path}/libargon2/';
+    var libraryPath = path.join(mainPath, 'libargon2-linux.so');
+
+    if (Platform.isMacOS) {
+      libraryPath = path.join(mainPath, 'libargon2-darwin.dylib');
+    }
+
+    if (Platform.isWindows) {
+      libraryPath = path.join(mainPath, 'libargon2-win.dll');
+    }
+
+    print('Library Path: $libraryPath');
+
+    return libraryPath;
   }
 }
