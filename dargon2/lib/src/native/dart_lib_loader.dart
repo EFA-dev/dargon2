@@ -29,19 +29,10 @@ class DartLibLoader implements LibLoader {
 
   @override
   String getPath() {
-    var mainPath = '${Directory.current.path}/libargon2/';
-    var libraryPath = path.join(mainPath, 'libargon2-linux.so');
+    var enf = Platform.environment['DARGON2_LIB_PATH'] ?? '';
 
-    if (Platform.isMacOS) {
-      libraryPath = path.join(mainPath, 'libargon2-darwin.dylib');
-    }
+    print('Environment: $enf');
 
-    if (Platform.isWindows) {
-      libraryPath = path.join(mainPath, 'libargon2-win.dll');
-    }
-
-    print('Library Path: $libraryPath');
-
-    return libraryPath;
+    return enf;
   }
 }
