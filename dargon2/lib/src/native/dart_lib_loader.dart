@@ -31,9 +31,14 @@ class DartLibLoader implements LibLoader {
   String getPath() {
     var enf = Platform.environment['DARGON2_LIB_PATH'] ?? '';
 
+    var f = File(enf);
+    if (f.existsSync()) {
+      print(f.absolute.path);
+    } else {
+      print('File does not exist');
+    }
+
     print('Environment: $enf');
-    print('Current Directory: ${Directory.current.path}');
-    print('Current File: ${Platform.script.path}');
 
     return enf;
   }
