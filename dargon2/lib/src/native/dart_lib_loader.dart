@@ -33,7 +33,7 @@ class DartLibLoader implements LibLoader {
 
     var f = File(enf);
     if (f.existsSync()) {
-      print(f.absolute.path);
+      print('File Path: ' + f.absolute.path);
     } else {
       print('File does not exist');
     }
