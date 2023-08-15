@@ -7,41 +7,24 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:dargon2_core/dargon2_core.dart';
-import 'package:path/path.dart' as path;
 // ignore: deprecated_member_use
 
 /// The Dylib Loader for any Dart native apps, regardless of platform. Loads the dylib
 /// from the given path, based off a conditional import on dart:ui
 class DartLibLoader implements LibLoader {
-  /// General library loader method, overridden from the abstract superclass
-  ///
-  /// Takes a given String [path], which is the Library's location
-  ///
-  /// Returns a [DynamicLibrary], which is the Argon2 Library
-  @override
-  DynamicLibrary loadLib() {
-    return DynamicLibrary.open(getPath());
-  }
-
-  /// The private getPath method, set to handle paths from all 3 Desktop platforms.
-  /// Returns the relative library location for desktops based on the plugin's location
-  /// and the binary's relative path
-
   @override
   String getPath() {
-    var enf = Platform.environment['DARGON2_LIB_PATH'] ?? '';
+    return '/usr/local/lib/libargon2.so.1';
+  }
 
-    print('Platform:' + Platform.operatingSystem);
+  @override
+  DynamicLibrary loadLib() {
+    final path = getPath();
 
-    var f = File(enf);
-    if (f.existsSync()) {
-      print('File Path: ' + f.absolute.path);
-    } else {
-      print('File does not exist');
+    if (File(path).existsSync()) {
+      return DynamicLibrary.open(path);
     }
 
-    print('Environment: $enf');
-
-    return enf;
+    throw UnsupportedError('Argon2 dynamic library is not available.');
   }
 }
